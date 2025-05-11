@@ -51,7 +51,13 @@ export const TakePhoto: React.FC = () => {
   };
 
   const sendPicture = async () => {
-    if (!photo) return;
+
+    console.log("📸 Enviando foto:", photo);
+    if (!photo) {
+      Alert.alert("⚠️ No hay foto para enviar");
+      
+      return;
+    };
 
     try {
       const base64Image = await FileSystem.readAsStringAsync(photo, {
@@ -66,7 +72,7 @@ export const TakePhoto: React.FC = () => {
           })
         );
         Alert.alert("✅ Foto enviada por WebSocket");
-        setPhoto(null); // Volver a modo cámara
+        setPhoto(null); 
       } else {
         Alert.alert("⚠️ WebSocket no está conectado");
       }
@@ -100,7 +106,7 @@ export const TakePhoto: React.FC = () => {
             </TouchableOpacity>
             <TouchableOpacity
               style={styles.sendButton}
-              onPress={() => sendPicture}
+              onPress={sendPicture}
             >
               <MaterialIcons name="send" size={24} color="#fff" />
             </TouchableOpacity>

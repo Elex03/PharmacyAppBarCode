@@ -1,17 +1,16 @@
 import React, { useState, useEffect, useRef } from "react";
 import { MaterialIcons } from "@expo/vector-icons";
-
 import {
   Text,
   View,
   StyleSheet,
-  Button,
   Image,
   Alert,
   TouchableOpacity,
 } from "react-native";
 import { CameraView } from "expo-camera";
 import * as FileSystem from "expo-file-system";
+import * as ImagePicker from "expo-image-picker"; // ✅ Importar ImagePicker
 
 export const TakePhoto: React.FC = () => {
   const [hasPermission, setHasPermission] = useState<boolean | null>(true);
@@ -50,14 +49,24 @@ export const TakePhoto: React.FC = () => {
     }
   };
 
-  const sendPicture = async () => {
+  const pickImage = async () => {
+    const result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      quality: 0.5,
+      base64: false,
+    });
 
+    if (!result.canceled && result.assets.length > 0) {
+      setPhoto(result.assets[0].uri);
+    }
+  };
+
+  const sendPicture = async () => {
     console.log("📸 Enviando foto:", photo);
     if (!photo) {
       Alert.alert("⚠️ No hay foto para enviar");
-      
       return;
-    };
+    }
 
     try {
       const base64Image = await FileSystem.readAsStringAsync(photo, {
@@ -72,7 +81,7 @@ export const TakePhoto: React.FC = () => {
           })
         );
         Alert.alert("✅ Foto enviada por WebSocket");
-        setPhoto(null); 
+        setPhoto(null);
       } else {
         Alert.alert("⚠️ WebSocket no está conectado");
       }
@@ -99,15 +108,13 @@ export const TakePhoto: React.FC = () => {
             resizeMode="cover"
           />
           <View style={styles.previewButtons}>
-            <TouchableOpacity 
-              style={styles.sendButton}
-              onPress={() => setPhoto(null)}>
-             <MaterialIcons name="replay" size={24} color="#fff" />
-            </TouchableOpacity>
             <TouchableOpacity
               style={styles.sendButton}
-              onPress={sendPicture}
+              onPress={() => setPhoto(null)}
             >
+              <MaterialIcons name="replay" size={24} color="#fff" />
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.sendButton} onPress={sendPicture}>
               <MaterialIcons name="send" size={24} color="#fff" />
             </TouchableOpacity>
           </View>
@@ -116,6 +123,13 @@ export const TakePhoto: React.FC = () => {
         <>
           <CameraView style={styles.camera} ref={cameraRef} />
           <View style={styles.buttonContainer}>
+            <TouchableOpacity
+              style={styles.galleryButton}
+              onPress={pickImage}
+            >
+              <MaterialIcons name="photo-library" size={28} color="#fff" />
+            </TouchableOpacity>
+
             <TouchableOpacity
               style={styles.takePictureButton}
               onPress={takePicture}
@@ -135,68 +149,57 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#000",
-    justifyContent: "center",
-    alignItems: "center",
   },
   camera: {
-    width: "100%",
-    height: "100%",
-    position: "absolute",
-  },
-  takePictureButton: {
-    alignItems: "center",
-    justifyContent: "center",
-    height: 100,
-    width: 100,
-  },
-
-  outerCircle: {
-    width: 80,
-    height: 80,
-    borderRadius: 40,
-    backgroundColor: "#fff",
-    alignItems: "center",
-    justifyContent: "center",
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.3,
-    shadowRadius: 3,
-    elevation: 5,
-  },
-
-  innerCircle: {
-    width: 50,
-    height: 50,
-    borderRadius: 25,
-
-    borderWidth: 4,
-    borderColor: "#000",
+    flex: 1,
   },
   buttonContainer: {
     position: "absolute",
-    bottom: 100,
-  },
-  preview: {
-    width: "100%",
-    height: "100%",
-    position: "absolute",
-  },
-  previewButtons: {
-    position: "absolute",
-    bottom: 100,
-    width: "100%",
+    bottom: 40,
+    left: 20,
+    right: 20,
     flexDirection: "row",
     justifyContent: "space-between",
-    paddingHorizontal: 20,
+    alignItems: "center",
   },
-  sendButton: {
-    backgroundColor: "#000",
-    padding: 10,
-    borderRadius: 35,
-    width: 70,
+  galleryButton: {
+    backgroundColor: "#333",
+    padding: 12,
+    borderRadius: 40,
+  },
+  takePictureButton: {
+    alignSelf: "center",
+  },
+  outerCircle: {
+    borderWidth: 4,
+    borderColor: "#fff",
+    borderRadius: 50,
     height: 70,
+    width: 70,
     justifyContent: "center",
     alignItems: "center",
   },
-
+  innerCircle: {
+    backgroundColor: "#fff",
+    borderRadius: 25,
+    height: 40,
+    width: 40,
+  },
+  preview: {
+    flex: 1,
+    width: "100%",
+  },
+  previewButtons: {
+    position: "absolute",
+    bottom: 40,
+    left: 20,
+    right: 20,
+    flexDirection: "row",
+    justifyContent: "space-between",
+  },
+  sendButton: {
+    backgroundColor: "#1e88e5",
+    padding: 16,
+    borderRadius: 50,
+  },
 });

@@ -4,6 +4,7 @@ import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import { BarcodeScanner } from "./src/components/BarCodeScanner";
 import { TakePhoto } from "./src/components/TakePicture";
+import { MaterialIcons } from "@expo/vector-icons";
 
 const Stack = createStackNavigator();
 
@@ -15,14 +16,7 @@ export default function App() {
           name="Home"
           component={HomeScreen}
           options={{
-            headerStyle: {
-              backgroundColor: "#178BF7",
-            },
-            headerTintColor: "#fff",
-            title: "FarmaNova",
-            headerTitleStyle: {
-              fontWeight: "bold",
-            },
+            headerShown: false,
           }}
         />
         <Stack.Screen
@@ -61,18 +55,26 @@ export default function App() {
 const HomeScreen = ({ navigation }: any) => {
   return (
     <View style={styles.container}>
-      <TouchableOpacity
-        style={styles.button}
-        onPress={() => navigation.navigate("ScanQRCode")}
-      >
-        <Text style={styles.buttonText}>Escanear QR</Text>
-      </TouchableOpacity>
-      <TouchableOpacity
-        style={styles.button}
-        onPress={() => navigation.navigate("TakePhoto")}
-      >
-        <Text style={styles.buttonText}>Tomar foto</Text>
-      </TouchableOpacity>
+      <View style={{ top: 50}}>
+        <Text style={{ fontWeight: "bold", fontSize: 24 }}>FarmaNova App</Text>
+        <View style={{width: 300, height: 5, backgroundColor: 'gray'}}/>
+      </View>
+      <View style={{ display: "flex", flexDirection: "row", padding: 20, justifyContent: 'space-evenly', margin: 50}}>
+        <TouchableOpacity
+          style={styles.button}
+          onPress={() => navigation.navigate("ScanQRCode")}
+        >
+          <MaterialIcons name="barcode-reader" size={40} color="black" />
+          <Text style={styles.buttonText}>Escanear QR</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={styles.button}
+          onPress={() => navigation.navigate("TakePhoto")}
+        >
+          <MaterialIcons name="photo-camera-back" size={30} color="black" />
+          <Text style={styles.buttonText}>Tomar foto</Text>
+        </TouchableOpacity>
+      </View>
     </View>
   );
 };
@@ -80,7 +82,7 @@ const HomeScreen = ({ navigation }: any) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: "center",
+    margin: 40,
     alignItems: "center",
     gap: 20,
     backgroundColor: "#fff",
@@ -89,10 +91,13 @@ const styles = StyleSheet.create({
     margin: 10,
     padding: 10,
     borderWidth: 1,
-    borderColor: "#178BF7",
+    borderColor: "#000",
     backgroundColor: "#fff",
     borderRadius: 5,
-    width: 200,
+    height: 200,
+    justifyContent: "center",
+    alignItems: 'center',
+    width: 150
   },
   buttonText: {
     color: "#2E2E2E",

@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import { Text, View, StyleSheet, Button, Alert } from "react-native";
-import { Camera, CameraView } from "expo-camera"; // Usar Camera para manejar permisos y cámara
+import { Camera, CameraView } from "expo-camera";
 import { BarcodeScanningResult } from "expo-camera";
 
 export const BarcodeScanner: React.FC = () => {
@@ -10,7 +10,7 @@ export const BarcodeScanner: React.FC = () => {
 
   useEffect(() => {
     const connectWebSocket = () => {
-      socketRef.current = new WebSocket("ws://10.17.88.110:3000"); // Cambia a tu IP local
+      socketRef.current = new WebSocket("ws://10.17.82.184:3000"); // Cambia a tu IP local
 
       socketRef.current.onopen = () => {
         console.log("Conectado al servidor WebSocket");
@@ -54,7 +54,12 @@ export const BarcodeScanner: React.FC = () => {
         socketRef.current &&
         socketRef.current.readyState === WebSocket.OPEN
       ) {
-        socketRef.current.send(JSON.stringify({ data }));
+        socketRef.current.send(
+          JSON.stringify({
+            type: "text",
+            data,
+          })
+        );
       } else {
         console.log("WebSocket no está abierto. Intentando reconectar...");
       }

@@ -55,23 +55,23 @@ export default function App() {
 const HomeScreen = ({ navigation }: any) => {
   return (
     <View style={styles.container}>
-      <View style={{ top: 50}}>
-        <Text style={{ fontWeight: "bold", fontSize: 24 }}>FarmaNova App</Text>
-        <View style={{width: 300, height: 5, backgroundColor: 'gray'}}/>
+      <View style={{ top: 50, gap: 10}}>
+        <Text style={{ fontWeight: "bold", fontSize: 24 , color: 'white'}}>FarmaNova App</Text>
+        <View style={{width: 300, height: 3, backgroundColor: 'gray'}}/>
       </View>
       <View style={{ display: "flex", flexDirection: "row", padding: 20, justifyContent: 'space-evenly', margin: 50}}>
         <TouchableOpacity
           style={styles.button}
           onPress={() => navigation.navigate("ScanQRCode")}
         >
-          <MaterialIcons name="barcode-reader" size={40} color="black" />
+          <MaterialIcons name="barcode-reader" size={40} color="#26A0FC" />
           <Text style={styles.buttonText}>Escanear QR</Text>
         </TouchableOpacity>
         <TouchableOpacity
           style={styles.button}
           onPress={() => navigation.navigate("TakePhoto")}
         >
-          <MaterialIcons name="photo-camera-back" size={30} color="black" />
+          <MaterialIcons name="photo-camera-back" size={30} color="#26A0FC" />
           <Text style={styles.buttonText}>Tomar foto</Text>
         </TouchableOpacity>
       </View>
@@ -82,25 +82,24 @@ const HomeScreen = ({ navigation }: any) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    margin: 40,
     alignItems: "center",
     gap: 20,
-    backgroundColor: "#fff",
+    backgroundColor: 'black', 
   },
   button: {
     margin: 10,
     padding: 10,
     borderWidth: 1,
-    borderColor: "#000",
-    backgroundColor: "#fff",
-    borderRadius: 5,
+    borderColor: "#fff",
+    borderRadius: 30,
     height: 200,
     justifyContent: "center",
     alignItems: 'center',
     width: 150
   },
   buttonText: {
-    color: "#2E2E2E",
+    fontWeight: 'bold',
+    color: "#fff",
     textAlign: "center",
   },
 });

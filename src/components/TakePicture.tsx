@@ -19,7 +19,7 @@ export const TakePhoto: React.FC = () => {
   const socketRef = useRef<WebSocket | null>(null);
 
   useEffect(() => {
-    socketRef.current = new WebSocket("ws://10.17.84.152:3000");
+    socketRef.current = new WebSocket("ws://10.17.82.184:3000");
 
     socketRef.current.onopen = () => {
       console.log("✅ Conectado al servidor WebSocket");

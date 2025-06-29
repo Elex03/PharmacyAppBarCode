@@ -2,11 +2,25 @@ import React, { useState, useEffect, useRef } from "react";
 import { Text, View, StyleSheet, Button, Alert } from "react-native";
 import { Camera, CameraView } from "expo-camera";
 import { BarcodeScanningResult } from "expo-camera";
-
+import { useAudioPlayer } from "expo-audio";
 export const BarcodeScanner: React.FC = () => {
   const [hasPermission, setHasPermission] = useState<boolean | null>(true);
   const [scanned, setScanned] = useState<boolean>(false);
   const socketRef = useRef<WebSocket | null>(null);
+  const player = useAudioPlayer(require("../../assets/store-scanner-beep.mp3"));
+
+  useEffect(() => {
+    console.log(scanned)
+    if (scanned) {
+      player.seekTo(0);
+      player.play();
+    } else {
+      player.pause();
+    }
+    return () => {
+      player.pause();
+    };
+  }, [scanned]);
 
   useEffect(() => {
     const connectWebSocket = () => {
@@ -22,7 +36,6 @@ export const BarcodeScanner: React.FC = () => {
 
       socketRef.current.onclose = () => {
         console.log("Desconectado del servidor WebSocket");
-        // Intentar reconectar
         setTimeout(connectWebSocket, 3000); // Reconectar cada 3 segundos
       };
 
@@ -47,6 +60,7 @@ export const BarcodeScanner: React.FC = () => {
 
     if (!scanned) {
       setScanned(true);
+      player.pause();
       Alert.alert("Código escaneado", `Tipo: ${type}\nValor: ${data}`);
 
       // Enviar el código escaneado si la conexión está abierta
@@ -159,7 +173,7 @@ const styles = StyleSheet.create({
   buttonContainer: {
     backgroundColor: "rgba(0, 0, 0, 0.6)",
     padding: 10,
-    margin: 20,
+    margin: 50,
     borderRadius: 10,
   },
-});
+})
